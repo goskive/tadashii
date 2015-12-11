@@ -30,7 +30,7 @@ function validate(schema, model) {
       result[attribute] = validations
         .filter((options) => {
           const [func, validatorArguments] =
-            extractFunctionAndArguments(attribute, modelValue, model, options);
+            extractFunctionAndArguments(modelValue, attribute, model, options);
 
           return func.apply(null, validatorArguments) === false;
         })
@@ -60,7 +60,7 @@ function isValid(schema, model) {
 
       return !!validations.find((options) => {
         const [func, validatorArguments] =
-          extractFunctionAndArguments(attribute, modelValue, model, options);
+          extractFunctionAndArguments(modelValue, attribute, model, options);
 
         return func.apply(null, validatorArguments) === false;
       });
