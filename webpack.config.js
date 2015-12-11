@@ -14,5 +14,10 @@ module.exports = {
       loaders: ['babel'],
       include: path.join(__dirname, 'src')
     }]
-  }
+  },
+  plugins: [
+    new webpack.optimize.UglifyJsPlugin({
+      minimize: true,
+    })
+  ]
 };
