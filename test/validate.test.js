@@ -8,9 +8,11 @@ describe('#validate', function() {
 
     assert.equal(errors.first_name.length, 1);
     assert.equal(errors.email.length, 1);
+    assert.equal(errors.custom_validator.length, 1);
 
     assert.equal(errors.first_name[0], 'minLength.fail');
     assert.equal(errors.email[0], 'isEmail.fail');
+    assert.equal(errors.custom_validator[0], 'customValidator.fail');
   });
 
   it("returns an empty array for valid fields", function() {
@@ -18,5 +20,6 @@ describe('#validate', function() {
 
     assert.equal(errors.first_name.length, 0);
     assert.equal(errors.email.length, 0);
+    assert.equal(errors.custom_validator.length, 0);
   });
 });
