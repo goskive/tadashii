@@ -1,24 +1,15 @@
-/*
- * Named validators. All validators gets the attribute, value & full model passed to them.
- */
-const validators = {
-  minLength:        (attribute, value, model, minLength) => value.length >= minLength,
-  isRequired:       (attribute, value, model) => typeof value !== "undefined" && value !== null,
-  isNotEmpty:       (attribute, value, model) => value.length > 0,
-  isEmail:          (attribute, value, model) => true,
-  matchesAttribute: (attribute, value, model, other_attribute) => model[attribute] === model[other_attribute],
-};
+import * as validators from './validators';
 
-function extractFunctionAndArguments(options) {
+function extractFunctionAndArguments(attribute, value, model, options) {
   const isCustom = typeof options[0] === "function";
   const func = isCustom ? options[0] : validators[options[0]];
   /*
    * [validatorFunction, argumentsToValidator, errorMessage]
    */
-  const args = options.slice(1, options.length - 2); // get middle arguments
+  const args = options.slice(1).slice(0, -1);
   const validatorArguments = [
     attribute,
-    modelValue,
+    value,
     model,
     ...args,
   ];
@@ -29,7 +20,7 @@ function extractFunctionAndArguments(options) {
 /*
  * Map over each validator and return error messages for those that fail.
  */
-export function validate(schema, model) {
+function validate(schema, model) {
   return Object
     .keys(schema)
     .reduce((result, attribute) => {
@@ -38,9 +29,10 @@ export function validate(schema, model) {
 
       result[attribute] = validations
         .filter((options) => {
-          const [func, validatorArguments] = extractFunctionAndArguments(options);
+          const [func, validatorArguments] =
+            extractFunctionAndArguments(attribute, modelValue, model, options);
 
-          return func.apply(null, validatorArguments);
+          return func.apply(null, validatorArguments) === false;
         })
         .map((options) => {
           const errorMessage = options[options.length - 1];
@@ -51,23 +43,29 @@ export function validate(schema, model) {
         });
 
         return result;
-      }, 
+      },
       {}
     );
 }
 
-
-
-
-
 /*
  * Determine whether a model is valid according to its schema
  */
-export function isValid(schema, model) {
-  const validators = Object
+function isValid(schema, model) {
+  return !Object
     .keys(schema)
-    .map(attribute => schema[attribute])
-    .reduce((result, item) => result.concat(item), []);
+    .find(attribute => {
+      const validations = schema[attribute];
+      const modelValue = model[attribute];
 
-  return validators.find(([func, args]) => func(args) === false);
+      return !!validations.find((options) => {
+        const [func, validatorArguments] =
+          extractFunctionAndArguments(attribute, modelValue, model, options);
+
+        return func.apply(null, validatorArguments) === false;
+      });
+    });
 }
+
+
+module.exports = {validate, isValid};

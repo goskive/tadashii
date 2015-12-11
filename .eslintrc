@@ -7,6 +7,7 @@ ecmaFeatures:
 env:
   browser: true
   node: true
+  mocha: true
 
 rules:
   space-before-blocks: 2
