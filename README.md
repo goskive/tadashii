@@ -55,11 +55,11 @@ const schema = {
 
 const model = {
     first_name:  "K",
-    email: "kasper@woof"  
+    email: "kasper@woof"
 };
 
 isValid(schema, model); # => false
-validate(schema model); # => 
+validate(schema model); # =>
 /*
     {
         first_name: ["First name must be at least two characters long"],
@@ -72,7 +72,7 @@ validate(schema model); # =>
 To provide maximum flexibility you can pass a function instead of a named validation. The validators signature looks like this:
 
 ```js
-function validator(attribute, value, model, additionalArgument) {
+function validator(value, attribute, model, additionalArgument) {
     return true || false;
 }
 ```
@@ -81,7 +81,7 @@ Any additional arguments in the schema is passed to the validator:
 
 ```js
 // This function gets two additional arguments
-function customValidator(attribute, value, model, additional, argument) {
+function customValidator(value, attribute, model, additional, argument) {
     console.log(additional + argument);
     return false;
 }
