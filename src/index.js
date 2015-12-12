@@ -1,15 +1,15 @@
 import * as validators from './validators';
 
-function extractFunctionAndArguments(attribute, value, model, options) {
+function extractFunctionAndArguments(modelValue, attribute, model, options) {
   const isCustom = typeof options[0] === "function";
   const func = isCustom ? options[0] : validators[options[0]];
   /*
    * [validatorFunction, argumentsToValidator, errorMessage]
    */
-  const args = options.slice(1).slice(0, -1);
+  const args = options.slice(1, -1);
   const validatorArguments = [
+    modelValue,
     attribute,
-    value,
     model,
     ...args,
   ];
@@ -32,7 +32,7 @@ function validate(schema, model) {
           const [func, validatorArguments] =
             extractFunctionAndArguments(modelValue, attribute, model, options);
 
-          return func.apply(null, validatorArguments) === false;
+          return func(...validatorArguments) === false;
         })
         .map((options) => {
           const errorMessage = options[options.length - 1];
@@ -62,7 +62,7 @@ function isValid(schema, model) {
         const [func, validatorArguments] =
           extractFunctionAndArguments(modelValue, attribute, model, options);
 
-        return func.apply(null, validatorArguments) === false;
+        return func(...validatorArguments) === false;
       });
     });
 }

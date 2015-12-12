@@ -13,7 +13,12 @@ module.exports = {
     ],
 
     custom_validator_with_args: [
-      [(value, attribute, model, v1, v2) => v1 + value === v2, 1, 2, 'customValidatorWithArgs.fail'],
+      [
+        (value, attribute, model, v1, v2) => v1 + value === v2,
+        1,
+        2,
+        'customValidatorWithArgs.fail'
+      ],
     ],
   },
 
