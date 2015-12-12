@@ -7,7 +7,6 @@ describe('#isValid', function() {
     var isValid = Tadashii.isValid(fixtures.simpleNameSchema, fixtures.simpleNamePassingModel);
 
     assert.equal(isValid, true);
-
   });
 
   it("returns false when model is invalid", function() {
