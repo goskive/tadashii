@@ -26,6 +26,7 @@
     "type": "git",
     "url": "https://github.com/qLearning/tadashii"
   },
+  "tonicExampleFilename": "example.js",
   "devDependencies": {
     "babel": "~6.3.13",
     "babel-cli": "^6.3.17",
