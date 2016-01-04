@@ -8,7 +8,8 @@
     "test:watch": "./node_modules/.bin/mocha --watch test/**.test.js",
     "build": "npm run transpile",
     "transpile": "./node_modules/babel-cli/bin/babel.js src --out-dir dist",
-    "lint": "./node_modules/.bin/eslint src/index.js"
+    "lint": "./node_modules/.bin/eslint src/index.js",
+    "prepublish": "npm run test && npm run build"
   },
   "keywords": [
     "forms",
