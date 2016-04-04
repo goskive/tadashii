@@ -1,6 +1,6 @@
 {
   "name": "tadashii",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Easy & functional way to validate a model against a schema",
   "main": "dist/index.js",
   "scripts": {
