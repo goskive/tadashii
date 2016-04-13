@@ -42,7 +42,7 @@ Combining your schema and model we're able to get answers to these questions:
 ## Example
 
 ```js
-import { validate, isValid } from 'tadashi';
+import { validate, isValid, firstError, isAttributeValid } from 'tadashi';
 
 const schema = {
     first_name: [
@@ -58,14 +58,16 @@ const model = {
     email: "kasper@woof"
 };
 
-isValid(schema, model); # => false
-validate(schema model); # =>
+isValid(schema, model);  // => false
+validate(schema, model); // =>
 /*
     {
         first_name: ["First name must be at least two characters long"],
         email: ["Email is not in a valid format"],
     }
  */
+firstError(schema, model); // ["first_name", "First name must be at least two characters long"]
+isAttributeValid(schema, model, 'first_name'); // => false
 ```
 
 ## Custom validators

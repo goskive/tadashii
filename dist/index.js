@@ -8,6 +8,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.validate = validate;
 exports.isValid = isValid;
 exports.firstError = firstError;
+exports.isAttributeValid = isAttributeValid;
 
 var _validators = require("./validators");
 
@@ -113,4 +114,21 @@ function firstError(schema, model) {
   } else {
     return null;
   }
+}
+
+function isAttributeValid(schema, model, attribute) {
+  var validations = schema[attribute];
+
+  return validations.find(function (validation) {
+    var modelValue = model[attribute];
+
+    var _extractFunctionAndAr7 = extractFunctionAndArguments(modelValue, attribute, model, validation);
+
+    var _extractFunctionAndAr8 = _slicedToArray(_extractFunctionAndAr7, 2);
+
+    var func = _extractFunctionAndAr8[0];
+    var validatorArguments = _extractFunctionAndAr8[1];
+
+    return func.apply(undefined, _toConsumableArray(validatorArguments)) === false;
+  }) === undefined;
 }

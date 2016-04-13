@@ -1,3 +1,10 @@
+# 2.1.0
+Adds the `isAttributeValid` function:
+
+```
+Tadashii.isAttributeValid(schema, model, attribute); // => true or false
+```
+
 # 2.0.0
 
 ## Exports

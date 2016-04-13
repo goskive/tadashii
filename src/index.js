@@ -96,3 +96,17 @@ export function firstError(schema, model) {
     return null;
   }
 }
+
+export function isAttributeValid(schema, model, attribute) {
+  const validations = schema[attribute];
+
+  return validations.find(validation => {
+    const modelValue = model[attribute];
+    const [func, validatorArguments] = extractFunctionAndArguments(modelValue,
+                                                                   attribute,
+                                                                   model,
+                                                                   validation);
+
+    return func(...validatorArguments) === false;
+  }) === undefined;
+}
