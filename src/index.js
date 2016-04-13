@@ -20,7 +20,7 @@ function extractFunctionAndArguments(modelValue, attribute, model, options) {
 /*
  * Map over each validator and return error messages for those that fail.
  */
-function validate(schema, model) {
+export function validate(schema, model) {
   return Object
     .keys(schema)
     .reduce((result, attribute) => {
@@ -51,7 +51,7 @@ function validate(schema, model) {
 /*
  * Determine whether a model is valid according to its schema
  */
-function isValid(schema, model) {
+export function isValid(schema, model) {
   return !Object
     .keys(schema)
     .find(attribute => {
@@ -67,5 +67,32 @@ function isValid(schema, model) {
     });
 }
 
+/*
+ * Return first error for model, or null if there is no error
+ */
+export function firstError(schema, model) {
+  const firstFailedValidation = Object
+    .keys(schema)
+    .reduce((result, attribute) =>
+      result.concat(
+        schema[attribute].map(v => [attribute, v])
+      )
+    , [])
+    .find(([attribute, validation]) => {
+      const modelValue = model[attribute];
+      const [func, validatorArguments] = extractFunctionAndArguments(modelValue,
+                                                                     attribute,
+                                                                     model,
+                                                                     validation);
 
-export default {validate, isValid};
+      return func(...validatorArguments) === false;
+    });
+
+  if (firstFailedValidation) {
+    const [attribute, validation] = firstFailedValidation;
+
+    return [attribute, validation[validation.length - 1]];
+  } else {
+    return null;
+  }
+}

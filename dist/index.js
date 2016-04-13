@@ -5,6 +5,9 @@ var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.validate = validate;
+exports.isValid = isValid;
+exports.firstError = firstError;
 
 var _validators = require("./validators");
 
@@ -74,4 +77,40 @@ function isValid(schema, model) {
   });
 }
 
-exports.default = { validate: validate, isValid: isValid };
+/*
+ * Return first error for model, or null if there is no error
+ */
+function firstError(schema, model) {
+  var firstFailedValidation = Object.keys(schema).reduce(function (result, attribute) {
+    return result.concat(schema[attribute].map(function (v) {
+      return [attribute, v];
+    }));
+  }, []).find(function (_ref) {
+    var _ref2 = _slicedToArray(_ref, 2);
+
+    var attribute = _ref2[0];
+    var validation = _ref2[1];
+
+    var modelValue = model[attribute];
+
+    var _extractFunctionAndAr5 = extractFunctionAndArguments(modelValue, attribute, model, validation);
+
+    var _extractFunctionAndAr6 = _slicedToArray(_extractFunctionAndAr5, 2);
+
+    var func = _extractFunctionAndAr6[0];
+    var validatorArguments = _extractFunctionAndAr6[1];
+
+    return func.apply(undefined, _toConsumableArray(validatorArguments)) === false;
+  });
+
+  if (firstFailedValidation) {
+    var _firstFailedValidatio = _slicedToArray(firstFailedValidation, 2);
+
+    var attribute = _firstFailedValidatio[0];
+    var validation = _firstFailedValidatio[1];
+
+    return [attribute, validation[validation.length - 1]];
+  } else {
+    return null;
+  }
+}

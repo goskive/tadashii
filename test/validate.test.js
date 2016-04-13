@@ -1,5 +1,5 @@
 var assert = require('assert');
-var Tadashii = require('../src/index.js').default;
+var Tadashii = require('../src/index.js');
 var fixtures = require('./fixtures.js');
 
 describe('#validate', function() {

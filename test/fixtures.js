@@ -28,7 +28,7 @@ module.exports = {
   },
 
   simpleNameFailingModel: {
-    first_name: 'Kasper',
+    first_name: 'Kasper', // Failing because of minLength 8
     email: 'woof@me',
     custom_validator: false,
     custom_validator_with_args: 2,
