@@ -9,6 +9,7 @@ exports.validate = validate;
 exports.isValid = isValid;
 exports.firstError = firstError;
 exports.firstErrors = firstErrors;
+exports.firstErrorForAttribute = firstErrorForAttribute;
 exports.isAttributeValid = isAttributeValid;
 
 var _validators = require("./validators");
@@ -121,7 +122,7 @@ function firstError(schema, model) {
  * Returns an object with each attribute that is invalid and its first error
  */
 function firstErrors(schema, model) {
-  var bla = Object.keys(schema).map(function (attribute) {
+  return Object.keys(schema).map(function (attribute) {
     var validations = schema[attribute];
     var modelValue = model[attribute];
 
@@ -155,8 +156,22 @@ function firstErrors(schema, model) {
 
     return result;
   }, {});
+}
 
-  return bla;
+function firstErrorForAttribute(schema, model, attribute) {
+  var modelValue = model[attribute];
+  var firstFailingValidation = schema[attribute].find(function (validation) {
+    var _extractFunctionAndAr9 = extractFunctionAndArguments(modelValue, attribute, model, validation);
+
+    var _extractFunctionAndAr10 = _slicedToArray(_extractFunctionAndAr9, 2);
+
+    var func = _extractFunctionAndAr10[0];
+    var validatorArguments = _extractFunctionAndAr10[1];
+
+    return func.apply(undefined, _toConsumableArray(validatorArguments)) === false;
+  });
+
+  return !!firstFailingValidation ? firstFailingValidation[firstFailingValidation.length - 1] : null;
 }
 
 function isAttributeValid(schema, model, attribute) {
@@ -165,12 +180,12 @@ function isAttributeValid(schema, model, attribute) {
   return validations.find(function (validation) {
     var modelValue = model[attribute];
 
-    var _extractFunctionAndAr9 = extractFunctionAndArguments(modelValue, attribute, model, validation);
+    var _extractFunctionAndAr11 = extractFunctionAndArguments(modelValue, attribute, model, validation);
 
-    var _extractFunctionAndAr10 = _slicedToArray(_extractFunctionAndAr9, 2);
+    var _extractFunctionAndAr12 = _slicedToArray(_extractFunctionAndAr11, 2);
 
-    var func = _extractFunctionAndAr10[0];
-    var validatorArguments = _extractFunctionAndAr10[1];
+    var func = _extractFunctionAndAr12[0];
+    var validatorArguments = _extractFunctionAndAr12[1];
 
     return func.apply(undefined, _toConsumableArray(validatorArguments)) === false;
   }) === undefined;

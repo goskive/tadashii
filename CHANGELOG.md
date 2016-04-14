@@ -1,3 +1,10 @@
+# 2.3.0
+Adds the `firstErrorForAttribute` function:
+```
+Tadashii.firstErrorForAttribute(schema, invalidModel, attribute); // => "some_value"
+Tadashii.firstErrorForAttribute(schema, validModel, attribute); // => null
+```
+
 # 2.2.0
 Adds the `firstErrors` function:
 

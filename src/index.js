@@ -124,7 +124,22 @@ export function firstErrors(schema, model) {
 
       return result;
     }, {});
+}
 
+export function firstErrorForAttribute(schema, model, attribute) {
+  const modelValue = model[attribute];
+  const firstFailingValidation = schema[attribute]
+    .find(validation => {
+      const [func, validatorArguments] = extractFunctionAndArguments(modelValue,
+                                                                     attribute,
+                                                                     model,
+                                                                     validation);
+
+      return func(...validatorArguments) === false;
+    });
+
+  return !!firstFailingValidation ?
+    firstFailingValidation[firstFailingValidation.length - 1] : null;
 }
 
 export function isAttributeValid(schema, model, attribute) {
