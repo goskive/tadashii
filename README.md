@@ -67,6 +67,7 @@ validate(schema, model); // =>
     }
  */
 firstError(schema, model); // ["first_name", "First name must be at least two characters long"]
+firstErrors(schema, model); // {first_name: "first_error", last_name: "last_error"}
 isAttributeValid(schema, model, 'first_name'); // => false
 ```
 

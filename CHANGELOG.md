@@ -1,3 +1,10 @@
+# 2.2.0
+Adds the `firstErrors` function:
+
+```
+Tadashii.firstErrors(schema, model) // => {someAttribute: "error", otherAttribute: "error"};
+```
+
 # 2.1.0
 Adds the `isAttributeValid` function:
 

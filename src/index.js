@@ -97,6 +97,37 @@ export function firstError(schema, model) {
   }
 }
 
+/*
+ * Returns an object with each attribute that is invalid and its first error
+ */
+export function firstErrors(schema, model) {
+  const bla = Object
+    .keys(schema)
+    .map(attribute => {
+      const validations = schema[attribute];
+      const modelValue = model[attribute];
+
+      const error = validations.map(validation => {
+        const [func, validatorArguments] = extractFunctionAndArguments(modelValue,
+                                                                       attribute,
+                                                                       model,
+                                                                       validation);
+
+        return func(...validatorArguments) ? null : validation[validation.length - 1];
+      }).find(e => e !== null);
+
+      return [attribute, error];
+    })
+    .filter(([attribute, error]) => error !== undefined)
+    .reduce((result, [attribute, error]) => {
+      result[attribute] = error;
+
+      return result;
+    }, {});
+
+  return bla;
+}
+
 export function isAttributeValid(schema, model, attribute) {
   const validations = schema[attribute];
 

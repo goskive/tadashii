@@ -8,6 +8,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.validate = validate;
 exports.isValid = isValid;
 exports.firstError = firstError;
+exports.firstErrors = firstErrors;
 exports.isAttributeValid = isAttributeValid;
 
 var _validators = require("./validators");
@@ -116,18 +117,60 @@ function firstError(schema, model) {
   }
 }
 
+/*
+ * Returns an object with each attribute that is invalid and its first error
+ */
+function firstErrors(schema, model) {
+  var bla = Object.keys(schema).map(function (attribute) {
+    var validations = schema[attribute];
+    var modelValue = model[attribute];
+
+    var error = validations.map(function (validation) {
+      var _extractFunctionAndAr7 = extractFunctionAndArguments(modelValue, attribute, model, validation);
+
+      var _extractFunctionAndAr8 = _slicedToArray(_extractFunctionAndAr7, 2);
+
+      var func = _extractFunctionAndAr8[0];
+      var validatorArguments = _extractFunctionAndAr8[1];
+
+      return func.apply(undefined, _toConsumableArray(validatorArguments)) ? null : validation[validation.length - 1];
+    }).find(function (e) {
+      return e !== null;
+    });
+
+    return [attribute, error];
+  }).filter(function (_ref3) {
+    var _ref4 = _slicedToArray(_ref3, 2);
+
+    var attribute = _ref4[0];
+    var error = _ref4[1];
+    return error !== undefined;
+  }).reduce(function (result, _ref5) {
+    var _ref6 = _slicedToArray(_ref5, 2);
+
+    var attribute = _ref6[0];
+    var error = _ref6[1];
+
+    result[attribute] = error;
+
+    return result;
+  }, {});
+
+  return bla;
+}
+
 function isAttributeValid(schema, model, attribute) {
   var validations = schema[attribute];
 
   return validations.find(function (validation) {
     var modelValue = model[attribute];
 
-    var _extractFunctionAndAr7 = extractFunctionAndArguments(modelValue, attribute, model, validation);
+    var _extractFunctionAndAr9 = extractFunctionAndArguments(modelValue, attribute, model, validation);
 
-    var _extractFunctionAndAr8 = _slicedToArray(_extractFunctionAndAr7, 2);
+    var _extractFunctionAndAr10 = _slicedToArray(_extractFunctionAndAr9, 2);
 
-    var func = _extractFunctionAndAr8[0];
-    var validatorArguments = _extractFunctionAndAr8[1];
+    var func = _extractFunctionAndAr10[0];
+    var validatorArguments = _extractFunctionAndAr10[1];
 
     return func.apply(undefined, _toConsumableArray(validatorArguments)) === false;
   }) === undefined;
