@@ -101,7 +101,7 @@ export function firstError(schema, model) {
  * Returns an object with each attribute that is invalid and its first error
  */
 export function firstErrors(schema, model) {
-  const bla = Object
+  return Object
     .keys(schema)
     .map(attribute => {
       const validations = schema[attribute];
@@ -125,7 +125,6 @@ export function firstErrors(schema, model) {
       return result;
     }, {});
 
-  return bla;
 }
 
 export function isAttributeValid(schema, model, attribute) {
